@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>398001 — Projects</title>
+<meta name="description" content="ESP32 firmware, web flashers and browser tools.">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --bg: #ffffff;
+        --ink: #0a0a0a;
+        --grey: #737373;
+        --grey-light: #a3a3a3;
+        --line: #e5e5e5;
+        --surface: #fafafa;
+        --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: var(--sans);
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 32px;
+    }
+
+    /* ---------- header ---------- */
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+    }
+
+    .logo {
+        font-family: var(--mono);
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+    }
+
+    .logo span {
+        color: var(--grey-light);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 28px;
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--grey);
+    }
+
+    .nav-links a {
+        transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+        color: var(--ink);
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+        padding: 96px 0 72px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--grey);
+        margin-bottom: 24px;
+    }
+
+    .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--ink);
+        animation: pulse 2.4s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.25; }
+    }
+
+    h1 {
+        font-size: clamp(2.6rem, 7vw, 4.8rem);
+        line-height: 1.04;
+        font-weight: 700;
+        letter-spacing: -0.045em;
+        max-width: 14ch;
+    }
+
+    .hero p {
+        margin-top: 24px;
+        max-width: 58ch;
+        color: var(--grey);
+        font-size: 1.05rem;
+    }
+
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--mono);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 13px 22px;
+        border: 1px solid var(--ink);
+        border-radius: 2px;
+        transition: all 0.18s ease;
+    }
+
+    .btn-solid {
+        background: var(--ink);
+        color: #fff;
+    }
+
+    .btn-solid:hover {
+        background: #fff;
+        color: var(--ink);
+    }
+
+    .btn-ghost:hover {
+        background: var(--ink);
+        color: #fff;
+    }
+
+    /* ---------- sections ---------- */
+    section {
+        padding: 72px 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 40px;
+    }
+
+    .section-head h2 {
+        font-size: 0.8rem;
+        font-family: var(--mono);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--grey);
+    }
+
+    .section-head .count {
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        color: var(--grey-light);
+    }
+
+    /* ---------- grid / cards ---------- */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        border-top: 1px solid var(--line);
+        border-left: 1px solid var(--line);
+    }
+
+    .card {
+        position: relative;
+        display: block;
+        padding: 32px;
+        background: var(--bg);
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .card:hover {
+        background: var(--ink);
+        color: #fff;
+    }
+
+    .card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 40px;
+    }
+
+    .num {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        color: var(--grey-light);
+        border: 1px solid var(--line);
+        border-radius: 2px;
+        padding: 3px 9px;
+        transition: all 0.2s ease;
+    }
+
+    .card:hover .num {
+        color: #fff;
+        border-color: #404040;
+    }
+
+    .arrow {
+        font-family: var(--mono);
+        font-size: 1.1rem;
+        color: var(--grey-light);
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .card:hover .arrow {
+        color: #fff;
+        transform: translate(4px, -4px);
+    }
+
+    .card h3 {
+        font-size: 1.35rem;
+        font-weight: 650;
+        letter-spacing: -0.02em;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 0.93rem;
+        color: var(--grey);
+        margin-bottom: 22px;
+        transition: color 0.2s ease;
+    }
+
+    .card:hover p {
+        color: var(--grey-light);
+    }
+
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+    }
+
+    .tag {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--grey);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 2px;
+        padding: 4px 9px;
+        transition: all 0.2s ease;
+    }
+
+    .card:hover .tag {
+        color: var(--grey-light);
+        background: transparent;
+        border-color: #404040;
+    }
+
+    /* ---------- info list ---------- */
+    .list {
+        border-top: 1px solid var(--line);
+    }
+
+    .row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 20px 4px;
+        border-bottom: 1px solid var(--line);
+        transition: padding 0.2s ease;
+    }
+
+    .row:hover {
+        padding-left: 14px;
+    }
+
+    .row .label {
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: -0.01em;
+    }
+
+    .row .desc {
+        color: var(--grey);
+        font-size: 0.9rem;
+        flex: 1;
+        margin-left: 24px;
+    }
+
+    .row .go {
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        color: var(--grey);
+        white-space: nowrap;
+        transition: color 0.2s ease;
+    }
+
+    .row:hover .go {
+        color: var(--ink);
+    }
+
+    /* ---------- footer ---------- */
+    footer {
+        padding: 48px 0 64px;
+    }
+
+    .foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        color: var(--grey-light);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .foot a:hover {
+        color: var(--ink);
+    }
+
+    /* ---------- reveal ---------- */
+    .reveal {
+        opacity: 0;
+        transform: translateY(14px);
+        animation: rise 0.6s ease forwards;
+    }
+
+    .d1 { animation-delay: 0.05s; }
+    .d2 { animation-delay: 0.15s; }
+
+    @keyframes rise {
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .reveal, .dot {
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @media (max-width: 860px) {
+        .wrap {
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            gap: 16px;
+        }
+
+        .hero {
+            padding: 64px 0 48px;
+        }
+
+        section {
+            padding: 48px 0;
+        }
+
+        .grid {
+            grid-template-columns: 1fr;
+        }
+
+        .row {
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .row .desc {
+            margin-left: 0;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="wrap nav">
+        <a href="/" class="logo">398001<span>.github.io</span></a>
+        <nav class="nav-links">
+            <a href="#tools">Tools</a>
+            <a href="#flash">Flash</a>
+            <a href="webflasher.html">Flasher</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="wrap">
+        <div class="hero">
+            <span class="eyebrow reveal"><span class="dot"></span> Projects online</span>
+            <h1 class="reveal d1">Firmware tools, built for the browser.</h1>
+            <p class="reveal d2">
+                Web flashers, emulators and utilities for ESP32 boards — no toolchain,
+                no installs. Open a page, plug in a device, done.
+            </p>
+            <div class="hero-actions reveal d2">
+                <a href="webflasher.html" class="btn btn-solid">Flash firmware →</a>
+                <a href="#tools" class="btn btn-ghost">Browse tools</a>
+            </div>
+        </div>
+    </div>
+
+    <section id="tools">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Tools</h2>
+                <span class="count">07</span>
+            </div>
+
+            <div class="grid">
+                <a class="card" href="webflasher.html">
+                    <div class="card-top"><span class="num">#01</span><span class="arrow">↗</span></div>
+                    <h3>Web Flasher</h3>
+                    <p>Flash ESP32-S3 / ESP32-C6 boards straight from the browser over WebSerial —
+                        LilyGo T-Embed CC1101 and Waveshare ESP32-C6-LCD supported.</p>
+                    <div class="tags">
+                        <span class="tag">WebSerial</span>
+                        <span class="tag">esptool-js</span>
+                        <span class="tag">ESP32</span>
+                        <span class="tag">Firmware</span>
+                    </div>
+                </a>
+
+                <a class="card" href="sdcardmanager.html">
+                    <div class="card-top"><span class="num">#02</span><span class="arrow">↗</span></div>
+                    <h3>SD Card Manager</h3>
+                    <p>Browse, upload and delete files on the device SD card from the browser
+                        through the serial console — no card reader needed.</p>
+                    <div class="tags">
+                        <span class="tag">WebSerial</span>
+                        <span class="tag">File Manager</span>
+                        <span class="tag">Serial</span>
+                    </div>
+                </a>
+
+                <a class="card" href="dualboot/dualbootlauncher.html">
+                    <div class="card-top"><span class="num">#03</span><span class="arrow">↗</span></div>
+                    <h3>Dual-Boot Launcher</h3>
+                    <p>Install the PIN-lockable launcher firmware on a fresh LilyGo T-Embed CC1101
+                        with one click — boot any ESP32-S3 firmware from three SD slots.</p>
+                    <div class="tags">
+                        <span class="tag">esp-web-tools</span>
+                        <span class="tag">ESP32-S3</span>
+                        <span class="tag">Launcher</span>
+                    </div>
+                </a>
+
+                <a class="card" href="dualboot/themecreator.html">
+                    <div class="card-top"><span class="num">#04</span><span class="arrow">↗</span></div>
+                    <h3>Theme Creator</h3>
+                    <p>Build complete theme packs in the browser — accent colours, custom icons
+                        and a boot animation, exported ready for the SD card.</p>
+                    <div class="tags">
+                        <span class="tag">Browser Tool</span>
+                        <span class="tag">Themes</span>
+                        <span class="tag">Canvas</span>
+                    </div>
+                </a>
+
+                <a class="card" href="tftdisplayemulator.html">
+                    <div class="card-top"><span class="num">#05</span><span class="arrow">↗</span></div>
+                    <h3>TFT Display Emulator</h3>
+                    <p>Visualise and test TFT display C++ code directly in the browser —
+                        no physical hardware needed during embedded graphics work.</p>
+                    <div class="tags">
+                        <span class="tag">C++</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Canvas API</span>
+                        <span class="tag">Embedded</span>
+                    </div>
+                </a>
+
+                <a class="card" href="projectionmappingtool.html">
+                    <div class="card-top"><span class="num">#06</span><span class="arrow">↗</span></div>
+                    <h3>Projection Mapping Tool</h3>
+                    <p>Real-time video transformation with animated effects, live preview and
+                        dual-tab sync — built for VJ performances.</p>
+                    <div class="tags">
+                        <span class="tag">Canvas 2D</span>
+                        <span class="tag">Video FX</span>
+                        <span class="tag">Live</span>
+                    </div>
+                </a>
+
+                <a class="card" href="mdlformatdocumentation.html">
+                    <div class="card-top"><span class="num">#07</span><span class="arrow">↗</span></div>
+                    <h3>MDL Format Documentation</h3>
+                    <p>Technical specification of the Manhunt 2 MDL model format — file structure,
+                        vertex formats and skeletal hierarchies with hex examples.</p>
+                    <div class="tags">
+                        <span class="tag">Binary Format</span>
+                        <span class="tag">Reverse Engineering</span>
+                        <span class="tag">Docs</span>
+                    </div>
+                </a>
+
+                <a class="card" href="dualboot/dualbootlauncher.html#firmware">
+                    <div class="card-top"><span class="num">+</span><span class="arrow">↗</span></div>
+                    <h3>Firmware Downloads</h3>
+                    <p>Bruce, the Flipper Zero ESP32 port and your own images —
+                        release binaries for every supported board in one place.</p>
+                    <div class="tags">
+                        <span class="tag">Bruce</span>
+                        <span class="tag">Flipper Port</span>
+                        <span class="tag">Releases</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="flash">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Supported boards</h2>
+                <span class="count">WebSerial / USB</span>
+            </div>
+
+            <div class="list">
+                <a class="row" href="webflasher.html">
+                    <span class="label">LilyGo T-Embed CC1101</span>
+                    <span class="desc">ESP32-S3 · 16MB flash · ST7789 320×170 · CC1101 Sub-GHz</span>
+                    <span class="go">flash →</span>
+                </a>
+                <a class="row" href="webflasher.html">
+                    <span class="label">Waveshare ESP32-C6-LCD 1.9</span>
+                    <span class="desc">ESP32-C6 · 8MB flash · ST7789V2 320×172 · touch</span>
+                    <span class="go">flash →</span>
+                </a>
+                <a class="row" href="dualboot/dualbootlauncher.html">
+                    <span class="label">T-Embed — Dual-Boot Launcher</span>
+                    <span class="desc">Launcher-first boot · 3 app slots · Wi-Fi screen mirror</span>
+                    <span class="go">install →</span>
+                </a>
+                <a class="row" href="dualboot/themecreator.html">
+                    <span class="label">Theme packs</span>
+                    <span class="desc">Colours, icons and boot animation — made in the browser</span>
+                    <span class="go">create →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="wrap foot">
+        <span>398001 // built with precision</span>
+        <span>
+            <a href="webflasher.html">Flasher</a> ·
+            <a href="dualboot/dualbootlauncher.html">Launcher</a> ·
+            <a href="#tools">Tools</a>
+        </span>
+    </div>
+</footer>
+
+</body>
+</html>
